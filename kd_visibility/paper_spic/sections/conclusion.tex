@@ -1,0 +1,30 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper presents a mechanism-driven empirical study of knowledge distillation failure under visibility degradation. Through a structured branch-wise analysis of 15 controlled experiments, we dissect why existing KD approaches struggle in foggy conditions and identify which hypothesized mechanisms receive empirical support.
+
+Our core contribution is reframing the problem from \emph{how to improve KD under fog} to \emph{why does KD fail under fog}. This shift enables systematic mechanism testing rather than incremental method development.
+
+Our principal findings are:
+
+\textbf{First}, branch-wise performance structure exists and is significant. Different KD mechanisms respond distinctly to visibility degradation, with localization distillation demonstrating relative robustness and logit distillation proving suboptimal despite its prevalence in the literature.
+
+\textbf{Second}, two commonly hypothesized mechanisms---distribution mismatch and uncertainty amplification---exhibit weak correlations with KD gains ($|r| < 0.5$, $p > 0.7$), indicating insufficient explanatory power in our setting. These results suggest that prevalent intuitions about KD failure may be incomplete.
+
+\textbf{Third}, among the mechanisms tested, occlusion---a specific, measurable component of visibility degradation---shows the strongest negative correlation with localization performance ($r = -0.989$, $p = 0.0015$), representing the most directly supported mechanism among those tested. When occlusion hides object boundaries, the spatial information required for accurate localization becomes unavailable. We specifically identify occlusion as the most strongly supported factor within visibility degradation, while noting that other aspects of visibility loss (contrast reduction, color shift) may contribute but were not directly tested in this study.
+
+\textbf{Fourth}, our analysis indicates that logit KD failure is unlikely to be resolved through hyperparameter adjustment alone, suggesting fundamental rather than configurational limitations.
+
+These findings carry methodological implications: future KD research for adverse conditions should prioritize information recovery and occlusion-aware designs rather than focusing solely on distribution alignment. The mechanisms that dominate clean-domain KD research may not transfer to visibility-degraded settings.
+
+This study also exemplifies a broader approach: mechanism-driven empirical analysis can advance understanding even when it yields negative results. Ruling out insufficient explanations---distribution mismatch, uncertainty amplification, and hyperparameter deficiency---is itself progress, narrowing the search space for viable solutions.
+
+Future work should extend these analyses to real-world degradation, validate occlusion-aware KD architectures, and explore multi-teacher or adaptive approaches that can maintain effectiveness under severe visibility loss. The goal is not merely to improve benchmark scores, but to develop KD methods that are fundamentally robust to the information loss that characterizes adverse visual conditions.
+
+\section*{Data and Code Availability}
+
+Experimental data and analysis scripts will be released upon acceptance of this paper. The Foggy Cityscapes dataset is publicly available at \url{https://www.cityscapes-dataset.com/}.
+
+\section*{Declaration of Competing Interests}
+
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.

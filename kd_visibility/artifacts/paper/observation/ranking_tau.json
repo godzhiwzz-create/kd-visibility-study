@@ -1,0 +1,40 @@
+{
+  "rankings": {
+    "light": {
+      "localization_only": 1,
+      "logit_only": 2,
+      "feature_only": 3,
+      "attention_only": 4,
+      "student_only": 5
+    },
+    "moderate": {
+      "localization_only": 1,
+      "feature_only": 2,
+      "student_only": 3,
+      "logit_only": 4,
+      "attention_only": 5
+    },
+    "heavy": {
+      "attention_only": 1,
+      "logit_only": 2,
+      "student_only": 3,
+      "localization_only": 4,
+      "feature_only": 5
+    }
+  },
+  "kendall_tau": {
+    "light_vs_moderate": {
+      "tau": 0.39999999999999997,
+      "pvalue": 0.48333333333333334
+    },
+    "moderate_vs_heavy": {
+      "tau": -0.7999999999999999,
+      "pvalue": 0.08333333333333333
+    },
+    "light_vs_heavy": {
+      "tau": -0.19999999999999998,
+      "pvalue": 0.8166666666666667
+    }
+  },
+  "interpretation": "tau > 0 \u8868\u793aranking\u7a33\u5b9a\u6027"
+}

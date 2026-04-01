@@ -1,0 +1,54 @@
+\documentclass[preprint,12pt]{elsarticle}
+
+% Packages
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{subcaption}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+% Journal reference - Signal Processing: Image Communication
+\journal{Signal Processing: Image Communication}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Branch-wise Mechanism Analysis of Knowledge Distillation Failure Under Visibility Degradation}
+
+\author[1]{\textcolor{red}{TODO: Author Name}}
+\ead{TODO: email@institution.edu}
+
+\author[1]{\textcolor{red}{TODO: Co-author Name}}
+
+\address[1]{\textcolor{red}{TODO: Department, University, Address}}
+
+\begin{abstract}
+Knowledge distillation (KD) is widely used to compress object detectors, yet its effectiveness degrades significantly under visibility-degraded conditions such as fog. While this phenomenon is acknowledged in the literature, the underlying failure mechanisms remain poorly understood. This paper presents a mechanism-driven empirical study that dissects KD failure through a structured branch-wise analysis. We evaluate five KD branches---logit, feature, attention, and localization distillation---across three visibility levels (light, moderate, heavy) on foggy street scenes. Our observations confirm that a branch-wise performance structure exists, with logit distillation proving suboptimal and localization distillation showing relative stability. Critically, we test three hypothesized mechanisms: distribution mismatch, uncertainty amplification, and occlusion within visibility degradation. Our findings indicate that distribution mismatch and uncertainty amplification exhibit weak correlations with KD gains and do not show sufficient explanatory power in our setting. In contrast, occlusion---a specific, measurable component of visibility degradation---shows strong negative correlation ($r=-0.989$, $p=0.0015$) with localization performance, representing the most directly supported mechanism among those tested. Our analysis further indicates that logit KD failure is unlikely to be resolved through simple hyperparameter adjustment alone. These results suggest that future KD methods for adverse conditions should prioritize handling visibility disruption rather than focusing solely on distribution alignment or calibration techniques.
+\end{abstract}
+
+\begin{keyword}
+knowledge distillation \sep object detection \sep visibility degradation \sep foggy scenes \sep mechanism analysis \sep empirical study
+\end{keyword}
+
+\end{frontmatter}
+
+% Main content sections
+\input{sections/intro}
+\input{sections/related_work}
+\input{sections/problem_setup}
+\input{sections/observation}
+\input{sections/mechanism}
+\input{sections/discussion}
+\input{sections/conclusion}
+
+\section*{Acknowledgments}
+\textcolor{red}{TODO: Acknowledgments to be added.}
+
+\bibliographystyle{elsarticle-num}
+\bibliography{refs}
+
+\end{document}

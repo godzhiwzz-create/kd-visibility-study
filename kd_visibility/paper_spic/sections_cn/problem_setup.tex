@@ -1,0 +1,80 @@
+\section{问题设置}
+\label{sec:setup}
+
+本节建立机制驱动实证研究的实验框架。我们阐明研究目标、分支级KD结构、可见度退化协议和评估方法。
+
+\subsection{研究目标}
+
+与传统KD研究提出新架构或损失函数不同，我们的目标是\textbf{机制识别}：确定KD在可见度退化下\emph{为什么}失效。我们试图回答：
+\begin{enumerate}
+    \item KD失效是否呈现分支级结构，还是所有分支均匀退化？
+    \item 哪些假设的机制（分布错配、不确定性放大、可见度破坏）得到实证支持？
+    \item 这些发现对未来方法设计有何启示？
+\end{enumerate}
+
+\subsection{分支级KD框架}
+
+我们采用模块化KD框架，分离四种不同的知识转移机制：
+
+\begin{itemize}
+    \item \textbf{Logit蒸馏}（$\mathcal{L}_{\text{logit}}$）：使用温度缩放交叉熵匹配教师和学生的软化分类输出\cite{hinton2015distilling}：
+    \begin{equation}
+    \mathcal{L}_{\text{logit}} = -\sum_{i} p_i^T \log(q_i^S)
+    \end{equation}
+    其中$p_i^T$和$q_i^S$分别是温度$T$下教师和学生的概率分布。
+
+    \item \textbf{特征蒸馏}（$\mathcal{L}_{\text{feat}}$）：通过$L_2$距离或余弦相似度对齐中间特征表示\cite{romero2014fitnets}。
+
+    \item \textbf{注意力蒸馏}（$\mathcal{L}_{\text{attn}}$）：从特征激活导出的空间注意力图转移\cite{zagoruyko2016paying}。
+
+    \item \textbf{定位蒸馏}（$\mathcal{L}_{\text{loc}}$）：专门蒸馏边界框回归输出，包括坐标和维度预测\cite{dai2021general}。
+\end{itemize}
+
+我们还包括一个\textbf{仅学生}基线，不使用任何教师监督训练，用于测量各分支的相对KD增益。
+
+\subsection{可见度退化协议}
+
+为模拟真实可见度退化，我们采用Foggy Cityscapes\cite{sakaridis2018semantic}使用的标准大气散射模型：
+\begin{equation}
+I(x) = J(x) \cdot t(x) + A \cdot (1 - t(x))
+\end{equation}
+其中$I(x)$是观测到的雾天图像，$J(x)$是场景辐射，$A$是全局大气光，$t(x) = e^{-\beta \cdot d(x)}$是透射图，散射系数为$\beta$，深度为$d(x)$。
+
+我们定义三个可见度等级：
+\begin{itemize}
+    \item \textbf{轻度}：$\beta = 0.005$（可见度轻微下降）
+    \item \textbf{中度}：$\beta = 0.01$（明显雾天，物体仍可识别）
+    \item \textbf{重度}：$\beta = 0.02$（严重遮挡和对比度下降）
+\end{itemize}
+
+\subsection{模型和数据集配置}
+
+\textbf{教师模型}：YOLOv8l（大版本，约25.9M参数），在清晰天气Cityscapes图像上训练，学生训练期间冻结。
+
+\textbf{学生模型}：YOLOv8m（中版本），在每个可见度条件下从头训练。
+
+\textbf{数据集}：Foggy Cityscapes（YOLO格式），包含8个目标类别（行人、骑手、汽车、卡车、公交、火车、摩托车、自行车），2975张训练图像和500张验证图像。
+
+\textbf{训练配置}：150轮，批次大小32，图像尺寸$640 \times 640$，AdamW优化器，初始学习率0.005，余弦退火。所有实验一致应用标准增强（Mosaic、Mixup）。
+
+\subsection{评估指标}
+
+\textbf{主要指标}：IoU=0.50时的平均精度均值（mAP@50），测量定位精度和分类正确性的标准检测指标。
+
+\textbf{次要指标}：机制分析中，我们计算：
+\begin{itemize}
+    \item \textbf{KD增益}：$\Delta_{\text{分支}} = \text{mAP}_{\text{分支}} - \text{mAP}_{\text{仅学生}}$，在每个可见度等级
+    \item \textbf{排序稳定性}：Kendall $\tau$相关，跨可见度条件分支排序
+    \item \textbf{机制相关}：Pearson $r$，假设因素（发散、熵、遮挡）与KD增益之间
+\end{itemize}
+
+\subsection{实验矩阵}
+
+我们的完整实验设计形成$5 \times 3$矩阵：
+\begin{itemize}
+    \item 5种KD配置：仅学生、仅logit、仅特征、仅注意力、仅定位
+    \item 3种可见度等级：轻度、中度、重度
+    \item 总计：15个训练运行，所有随机种子和超参数受控
+\end{itemize}
+
+该结构支持观测级分析（比较分支性能）和机制级分析（测试特定假设）。

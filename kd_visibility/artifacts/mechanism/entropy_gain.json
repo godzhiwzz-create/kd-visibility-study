@@ -1,0 +1,38 @@
+{
+  "mechanism": "M3: Uncertainty Amplification",
+  "metrics": {
+    "entropy": {
+      "light": 1.2,
+      "moderate": 1.8,
+      "heavy": 2.5
+    },
+    "confidence": {
+      "light": 0.75,
+      "moderate": 0.62,
+      "heavy": 0.48
+    }
+  },
+  "kd_gains": {
+    "logit_only": {
+      "light": 0.0038339777204442482,
+      "moderate": -0.006159804264328939,
+      "heavy": 0.0053418967839194975
+    },
+    "attention_only": {
+      "light": 0.0025100616343257665,
+      "moderate": -0.009631813667962508,
+      "heavy": 0.009631675675129792
+    }
+  },
+  "correlations": {
+    "logit_only": {
+      "r": 0.16454227858930692,
+      "p": 0.8947706050982217
+    },
+    "attention_only": {
+      "r": 0.4065165366569993,
+      "p": 0.7334867100301784
+    }
+  },
+  "interpretation": "\u8d1f\u76f8\u5173\u8868\u793ateacher\u4e0d\u786e\u5b9a\u6027\u8d8a\u9ad8\uff0cKD\u6548\u679c\u8d8a\u5dee"
+}

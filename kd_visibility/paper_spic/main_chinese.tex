@@ -1,0 +1,67 @@
+\documentclass[preprint,12pt]{elsarticle}
+
+% 中文支持
+\usepackage{ctex}
+\usepackage{xeCJK}
+
+% 其他包
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{subcaption}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+% 字体设置
+\setCJKmainfont{PingFang SC}
+\setCJKsansfont{PingFang SC}
+\setCJKmonofont{PingFang SC}
+
+% 图表标题中文
+\captionsetup[figure]{labelsep=space}
+\captionsetup[table]{labelsep=space}
+
+% 期刊引用
+\journal{Signal Processing: Image Communication（中文版预览）}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{可见度退化下知识蒸馏失效的机制分析：分支级实证研究}
+
+\author[1]{作者姓名（待填写）}
+\ead{email@institution.edu}
+
+\author[1]{合作者姓名（待填写）}
+
+\address[1]{单位地址（待填写）}
+
+\begin{abstract}
+知识蒸馏（KD）是深度神经网络压缩的标准技术，但在雾天等可见度退化条件下，其有效性显著下降。现有研究虽已观察到该现象，但背后的失效机制仍不清楚。本文通过结构化的分支级分析，系统性地剖析KD失效原因。我们在雾天街景数据集上评估了四种KD分支（logit、特征、注意力、定位蒸馏）在三种可见度等级（轻度、中度、重度）下的表现。研究发现：分支级性能结构确实存在，logit蒸馏并非最优，而定位蒸馏表现出相对稳定性。更重要的是，我们检验了三种常见假设机制：分布错配、不确定性放大和可见度破坏。结果表明，分布错配和不确定性放大与KD增益的相关性较弱，在本实验设置中不足以解释观测到的退化。相比之下，遮挡（可见度退化的具体可测成分）与定位性能呈现强负相关（$r=-0.989$，$p=0.0015$），是所测试机制中最直接得到证据支持的因素。温度扫描分析进一步表明，logit KD失效无法通过简单超参数调优解决。这些发现提示：针对恶劣条件的KD方法设计应优先处理遮挡问题，而非仅关注分布对齐。
+\end{abstract}
+
+\begin{keyword}
+知识蒸馏 \sep 目标检测 \sep 可见度退化 \sep 雾天场景 \sep 机制分析 \sep 实证研究
+\end{keyword}
+
+\end{frontmatter}
+
+% 中文章节
+\input{sections_cn/intro}
+\input{sections_cn/related_work}
+\input{sections_cn/problem_setup}
+\input{sections_cn/observation}
+\input{sections_cn/mechanism}
+\input{sections_cn/discussion}
+\input{sections_cn/conclusion}
+
+\section*{致谢}
+本文研究得到相关机构支持（待填写）。
+
+\bibliographystyle{elsarticle-num}
+\bibliography{refs}
+
+\end{document}

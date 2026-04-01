@@ -1,0 +1,6 @@
+KD Branch,light,moderate,heavy
+student_only,0.0000,0.0000,0.0000
+logit_only,0.0038,-0.0062,0.0053
+feature_only,0.0033,0.0001,-0.0049
+attention_only,0.0025,-0.0096,0.0096
+localization_only,0.0124,0.0033,-0.0019

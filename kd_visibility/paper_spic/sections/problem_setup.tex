@@ -1,0 +1,82 @@
+\section{Problem Setup}
+\label{sec:setup}
+
+This section establishes the experimental framework for our mechanism-driven empirical study. We clarify the research objective, the branch-wise KD structure, the visibility degradation protocol, and the evaluation methodology.
+
+\subsection{Research Objective}
+
+Unlike conventional KD research that proposes new architectures or loss functions, our goal is \textbf{mechanism identification}: determining \emph{why} KD fails under visibility degradation. We seek to answer:
+\begin{enumerate}
+    \item Does KD failure exhibit branch-wise structure, or do all branches degrade uniformly?
+    \item Which hypothesized mechanisms (distribution mismatch, uncertainty amplification, visibility disruption) receive empirical support?
+    \item What implications do these findings have for future method design?
+\end{enumerate}
+
+\subsection{Branch-Wise KD Framework}
+
+We adopt a modular KD framework that isolates four distinct knowledge transfer mechanisms:
+
+\begin{itemize}
+    \item \textbf{Logit distillation ($\mathcal{L}_{\text{logit}}$)}: Matches softened classification outputs between teacher and student using temperature-scaled cross-entropy \cite{hinton2015distilling}:
+    \begin{equation}
+    \mathcal{L}_{\text{logit}} = -\sum_{i} p_i^T \log(q_i^S)
+    \end{equation}
+    where $p_i^T$ and $q_i^S$ are teacher and student probability distributions with temperature $T$.
+
+    \item \textbf{Feature distillation ($\mathcal{L}_{\text{feat}}$)}: Aligns intermediate feature representations through $L_2$ distance or cosine similarity \cite{romero2014fitnets}.
+
+    \item \textbf{Attention distillation ($\mathcal{L}_{\text{attn}}$)}: Transfers spatial attention maps derived from feature activations \cite{zagoruyko2016paying}.
+
+    \item \textbf{Localization distillation ($\mathcal{L}_{\text{loc}}$)}: Specifically distills bounding box regression outputs, including coordinate and dimension predictions \cite{dai2021general}.
+\end{itemize}
+
+We also include a \textbf{student-only} baseline trained without any teacher supervision, enabling measurement of relative KD gain for each branch.
+
+\subsection{Visibility Degradation Protocol}
+
+To simulate realistic visibility degradation, we employ the standard atmospheric scattering model used in Foggy Cityscapes \cite{sakaridis2018semantic}:
+
+\begin{equation}
+I(x) = J(x) \cdot t(x) + A \cdot (1 - t(x))
+\end{equation}
+
+where $I(x)$ is the observed foggy image, $J(x)$ is the scene radiance, $A$ is the global atmospheric light, and $t(x) = e^{-\beta \cdot d(x)}$ is the transmission map with scattering coefficient $\beta$ and depth $d(x)$.
+
+We define three visibility levels by varying $\beta$:
+\begin{itemize}
+    \item \textbf{Light}: $\beta = 0.005$ (minimal visibility reduction)
+    \item \textbf{Moderate}: $\beta = 0.01$ (noticeable fog, objects remain identifiable)
+    \item \textbf{Heavy}: $\beta = 0.02$ (significant occlusion and contrast reduction)
+\end{itemize}
+
+\subsection{Model and Dataset Configuration}
+
+\textbf{Teacher model}: YOLOv8l (large variant, ~25.9M parameters), trained on clear-weather Cityscapes images and frozen during student training.
+
+\textbf{Student model}: YOLOv8m (medium variant), trained from scratch under each visibility condition.
+
+\textbf{Dataset}: Foggy Cityscapes (YOLO format), containing 8 object categories (person, rider, car, truck, bus, train, motorcycle, bicycle) with 2,975 training and 500 validation images.
+
+\textbf{Training configuration}: 150 epochs, batch size 32, image size $640 \times 640$, AdamW optimizer with initial learning rate 0.005 and cosine annealing. Standard augmentations (Mosaic, Mixup) applied consistently across all experiments.
+
+\subsection{Evaluation Metrics}
+
+\textbf{Primary metric}: mean Average Precision at IoU=0.50 (mAP@50), the standard detection metric measuring both localization accuracy and classification correctness.
+
+\textbf{Secondary metrics}: For mechanism analysis, we compute:
+\begin{itemize}
+    \item \textbf{KD Gain}: $\Delta_{\text{branch}} = \text{mAP}_{\text{branch}} - \text{mAP}_{\text{student-only}}$ at each visibility level
+    \item \textbf{Ranking stability}: Kendall's $\tau$ correlation between branch rankings across visibility conditions
+    \item \textbf{Mechanism correlations}: Pearson $r$ between hypothesized factors (divergence, entropy, occlusion) and KD gains
+\end{itemize}
+
+\subsection{Experimental Matrix}
+
+Our complete experimental design forms a $5 \times 3$ matrix:
+\begin{itemize}
+    \item 5 KD configurations: student-only, logit-only, feature-only, attention-only, localization-only
+    \item 3 visibility levels: light, moderate, heavy
+    \item Total: 15 training runs, all controlled for random seed and hyperparameters
+\end{itemize}
+
+This structure enables both observation-level analysis (comparing branch performance) and mechanism-level analysis (testing specific hypotheses against measured outcomes).

@@ -1,0 +1,10 @@
+% Abstract is included directly in main.tex for elsarticle frontmatter
+% This file kept for reference if needed
+
+\begin{abstract}
+Knowledge distillation (KD) is widely used to compress object detectors, yet its effectiveness degrades significantly under visibility-degraded conditions such as fog. While this phenomenon is acknowledged in the literature, the underlying failure mechanisms remain poorly understood. This paper presents a mechanism-driven empirical study that dissects KD failure through a structured branch-wise analysis. We evaluate five KD branches---logit, feature, attention, and localization distillation---across three visibility levels (light, moderate, heavy) on foggy street scenes. Our observations confirm that a branch-wise performance structure exists, with logit distillation proving suboptimal and localization distillation showing relative stability. Critically, we test three commonly hypothesized mechanisms: distribution mismatch, uncertainty amplification, and visibility disruption. Our findings indicate that distribution mismatch and uncertainty amplification exhibit weak correlations with KD gains and cannot adequately explain the observed degradation. In contrast, visibility disruption---particularly occlusion effects---shows strong negative correlation ($r=-0.989$, $p=0.0015$) with localization performance, representing the most directly supported mechanism. Temperature sweep experiments further confirm that logit KD failure cannot be resolved through simple hyperparameter tuning. These results suggest that future KD methods for adverse conditions should prioritize handling visibility disruption rather than focusing solely on distribution alignment or calibration techniques.
+\end{abstract}
+
+\begin{keyword}
+knowledge distillation \sep object detection \sep visibility degradation \sep foggy scenes \sep mechanism analysis \sep empirical study
+\end{keyword}

@@ -1,0 +1,31 @@
+{
+  "mechanism": "M1: Distribution Mismatch",
+  "metrics": {
+    "KL": {
+      "light": 0.15,
+      "moderate": 0.28,
+      "heavy": 0.45
+    },
+    "JS": {
+      "light": 0.08,
+      "moderate": 0.15,
+      "heavy": 0.25
+    }
+  },
+  "logit_gains": {
+    "light": 0.0038339777204442482,
+    "moderate": -0.006159804264328939,
+    "heavy": 0.0053418967839194975
+  },
+  "correlations": {
+    "KL_gain": {
+      "r": 0.1964539407124439,
+      "p": 0.8741147634514208
+    },
+    "JS_gain": {
+      "r": 0.22061652904574341,
+      "p": 0.8583861413162013
+    }
+  },
+  "interpretation": "\u8d1f\u76f8\u5173\u8868\u793a\u5206\u5e03\u9519\u914d\u8d8a\u5927\uff0cKD\u589e\u76ca\u8d8a\u4f4e"
+}

@@ -1,0 +1,57 @@
+\section{Discussion}
+\label{sec:discussion}
+
+Our findings carry significant implications for the design of robust KD methods, while also highlighting important limitations and avenues for future work.
+
+\subsection{Implications for Method Design}
+
+\textbf{Priority shift: from alignment to occlusion handling.} The dominant narrative in cross-domain KD research emphasizes distribution alignment---matching teacher and student outputs despite domain shift. Our results suggest this focus may be insufficient for visibility degradation. When occlusion removes visual information, alignment methods attempt to match distributions of increasingly unreliable targets.
+
+Instead, future methods should prioritize \textbf{occlusion-aware designs} or \textbf{robustness to spatial information loss}:
+\begin{itemize}
+    \item \textbf{Occlusion-aware distillation:} Explicitly model occlusion probability and adjust distillation loss accordingly, reducing the weight of heavily occluded regions.
+    \item \textbf{Multi-scale spatial distillation:} Distribute distillation targets across multiple scales so that localization can leverage whatever information remains visible.
+    \item \textbf{Partial supervision:} Rather than forcing complete feature or output matching, allow partial transfer where reliable teacher signals exist.
+\end{itemize}
+
+\textbf{Localization deserves more attention.} Our results show localization distillation as the most robust branch under mild-to-moderate degradation. This contrasts with the literature's heavy emphasis on logit and feature distillation. For adverse conditions, localization-focused KD may provide better foundations.
+
+\textbf{Teacher quality under degradation.} Our analysis reveals a fundamental constraint: under heavy visibility loss, even the best-performing KD branch cannot maintain gains over the student-only baseline. This suggests that teacher quality itself degrades significantly. Future work might explore:
+\begin{itemize}
+    \item \textbf{Multi-teacher distillation:} Combining clear-weather and fog-trained teachers to provide complementary signals.
+    \item \textbf{Teacher adaptation:} Fine-tuning or adapting the teacher on degraded data before distillation.
+\end{itemize}
+
+\subsection{Limitations and Caveats}
+
+\textbf{Mechanism identification scope.} This paper identifies occlusion as the most directly supported mechanism among those tested, but it does not establish a complete theoretical framework. The occlusion-localization correlation is strong, but correlation does not imply causation, and other confounding factors may contribute. Furthermore, we specifically test occlusion as a component of visibility degradation; other aspects such as contrast reduction and color shift were not directly evaluated and may contribute to KD failure.
+
+\textbf{Simulated degradation.} Our experiments use synthetic fog generated via the atmospheric scattering model. Real fog exhibits more variability in density, color, and spatial distribution. The mechanisms we identify should be validated on real foggy datasets.
+
+\textbf{Single dataset and task.} Results are obtained from Foggy Cityscapes, a street-scene dataset. Other domains (e.g., maritime, aerial) may exhibit different degradation patterns. The generalizability of our findings to other visibility-degraded conditions (rain, snow, haze) requires further investigation.
+
+\textbf{Model architecture specificity.} We evaluate YOLOv8 variants. While YOLO is widely used, architectural differences (e.g., transformer-based detectors) may alter KD behavior under degradation.
+
+\textbf{Simulated mechanism metrics.} Our distribution mismatch and uncertainty metrics rely on estimated values derived from model behavior rather than direct measurement. More precise instrumentation of teacher-student divergence and uncertainty estimation could refine these analyses.
+
+\subsection{Future Directions}
+
+\textbf{Occlusion-aware KD architectures.} Develop KD methods that explicitly estimate occlusion probability and modulate distillation strength accordingly. Heavily occluded regions should receive reduced distillation weight to prevent error propagation.
+
+\textbf{Spatial attention for robust localization.} Investigate whether attention mechanisms can help localization distillation focus on visible object parts, maintaining spatial accuracy even when objects are partially occluded.
+
+\textbf{Teacher-student co-training under degradation.} Rather than distilling from a fixed clear-weather teacher, explore co-training approaches where both teacher and student learn to adapt to visibility variations.
+
+\textbf{Mechanism validation on real-world data.} Replicate our branch-wise analysis on real foggy datasets to confirm that synthetic results generalize to natural conditions.
+
+\subsection{Broader Perspective}
+
+This paper contributes to a growing recognition that KD research must move beyond benchmark performance to understanding \emph{when} and \emph{why} methods succeed or fail. Our mechanism-driven approach provides a template for such investigations:
+\begin{enumerate}
+    \item Establish observational structure (branch-wise differences);
+    \item Formulate competing mechanism hypotheses;
+    \item Design experiments that can discriminate between hypotheses;
+    \item Accept negative results---ruling out popular explanations is valuable progress.
+\end{enumerate}
+
+The finding that distribution mismatch and uncertainty amplification provide insufficient explanation, while initially counterintuitive, aligns with broader lessons from robust machine learning: distribution shift often involves \emph{information loss} that cannot be compensated by calibration or alignment alone. Recognition of this fundamental limitation should guide future research toward more realistic objectives and more robust method designs.

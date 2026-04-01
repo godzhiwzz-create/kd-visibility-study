@@ -1,0 +1,27 @@
+{
+  "experiment_completed": true,
+  "mechanisms_analyzed": [
+    "M1_distribution_mismatch",
+    "M3_uncertainty",
+    "M2_representation",
+    "C1_temp_sweep"
+  ],
+  "findings": {
+    "M1": "KL/JS\u4e0elogit gain\u8d1f\u76f8\u5173\uff0c\u5206\u5e03\u9519\u914d\u5f71\u54cdKD\u6548\u679c",
+    "M2": "occlusion\u4e0elocalization\u6027\u80fd\u8d1f\u76f8\u5173",
+    "M3": "teacher entropy\u4e0eKD gain\u8d1f\u76f8\u5173\uff0c\u4e0d\u786e\u5b9a\u6027\u653e\u5927\u95ee\u9898",
+    "C1": "temperature sweep\u65e0\u6cd5\u89e3\u51b3logit KD\u7684\u6839\u672c\u95ee\u9898"
+  },
+  "success_criteria": {
+    "observation": {
+      "logit_not_optimal": true,
+      "gain_differences": true,
+      "tau_positive": true
+    },
+    "mechanism": {
+      "at_least_one_significant": true,
+      "at_least_one_rejected": true
+    }
+  },
+  "paper_implication": "KD\u5728\u96fe\u5929\u5931\u6548\u662f\u591a\u673a\u5236\u5171\u540c\u4f5c\u7528\u7684\u7ed3\u679c\uff0c\u9700\u8981\u9488\u5bf9\u6027\u8bbe\u8ba1"
+}

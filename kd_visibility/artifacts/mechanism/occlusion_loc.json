@@ -1,0 +1,22 @@
+{
+  "mechanism": "M2: Representation Misalignment + Visibility Disruption",
+  "occlusion_ratios": [
+    0.0,
+    0.15,
+    0.3,
+    0.45,
+    0.6
+  ],
+  "localization_performance": [
+    0.595,
+    0.582,
+    0.568,
+    0.545,
+    0.52
+  ],
+  "correlation": {
+    "r": -0.9886018945869947,
+    "p": 0.0014582733760279032
+  },
+  "interpretation": "\u8d1f\u76f8\u5173\u8868\u793a\u906e\u6321\u8d8a\u4e25\u91cd\uff0clocalization\u6027\u80fd\u8d8a\u4f4e"
+}

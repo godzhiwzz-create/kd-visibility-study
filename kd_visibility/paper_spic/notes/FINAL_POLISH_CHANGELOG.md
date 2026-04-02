@@ -159,6 +159,16 @@ figures/
 - `generate_fig5.py` - Figure 5 专用生成脚本
 - `notes/FINAL_POLISH_CHANGELOG.md` - 本文件
 
+### 文献引用更新 (新增)
+5. `refs.bib` - 从 15 条扩展到 39 条引用
+   - 新增 SPIC 期刊近 3 年文献 (2022-2024)
+   - 新增 KD under domain shift 文献 (2020-2023)
+   - 新增恶劣天气/雾天检测文献 (2021-2023)
+   - 新增 image compression/communication 相关文献
+   - 新增机制分析理论基础文献
+6. `sections/related_work.tex` - 更新引用，删除 TODO 注释
+7. `sections/intro.tex` - ITS 段落增加 SPIC 文献引用
+
 ---
 
 ## 最终稿件状态
@@ -194,12 +204,12 @@ figures/
 - [ ] `\section*{Acknowledgments}` - 添加资助信息、致谢
 
 ### 参考文献完善
-- [ ] Related Work 中 TODO 注释的文献补充
-- [ ] 2022-2024 年最新 SPIC 相关文献
+- [x] Related Work 中 TODO 注释的文献补充 (已完成，新增 24 条，总计 39 条)
+- [x] 2022-2024 年最新 SPIC 相关文献 (已添加 5 条 SPIC 期刊文献)
 
 ### GitHub/Code
-- [ ] 确认代码仓库公开时间
-- [ ] 更新 Data Availability 中的实际链接（接受后）
+- [x] 代码仓库已公开: https://github.com/godzhiwzz-create/kd-visibility-study
+- [ ] 接受后可更新为正式 DOI 或永久链接
 
 ---
 
@@ -211,12 +221,14 @@ figures/
 3. **图表风格统一**: 全扁平化设计，配色克制，符合期刊审美
 4. **Claim 强度精确**: 消除过度表述，保持 "most directly supported among tested" 的精确限定
 5. **逻辑闭环完整**: occlusion → localization degradation → overall KD collapse 链条清晰
+6. **文献引用完善**: 从 15 条扩展到 39 条，包含 5 条 SPIC 期刊近 3 年文献
 
 ### 审稿风险降级
 | 风险点 | 处理前 | 处理后 |
 |--------|--------|--------|
 | occlusion 过度泛化 | 中 | 低 (明确限定为 "among those tested") |
 | M1/M3 否定过强 | 中 | 低 (改为 "insufficient explanatory power") |
+| 文献时效性不足 | 中 | 低 (新增 2022-2024 SPIC 文献 5 条) |
 | 缺乏定性证据 | 中 | 低 (新增 Fig 5) |
 | SPIC 相关性弱 | 中 | 低 (新增 ITS 段落) |
 | 图风格不统一 | 低 | 极低 (全扁平化) |

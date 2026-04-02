@@ -8,19 +8,21 @@ This directory contains a preview manuscript for submission to **Signal Processi
 
 ```
 paper_spic/
-├── main.tex              # Main document (use this for compilation)
-├── sections/
-│   ├── abstract.tex      # Abstract (included in main.tex)
-│   ├── intro.tex         # Section 1: Introduction
-│   ├── related_work.tex  # Section 2: Related Work
-│   ├── problem_setup.tex # Section 3: Problem Setup
-│   ├── observation.tex   # Section 4: Structured Observation
-│   ├── mechanism.tex     # Section 5: Mechanism Analysis
-│   ├── discussion.tex    # Section 6: Discussion
-│   └── conclusion.tex    # Section 7: Conclusion
-├── figures/              # Figure files (currently placeholder)
-├── tables/               # Table files (if separated)
+├── main.tex              # English main document
+├── main.pdf              # English compiled PDF
+├── main_cn.tex           # Chinese main document
+├── main_cn.pdf           # Chinese compiled PDF
+├── sections/             # English paper sections
+├── sections_cn/          # Chinese paper sections
+├── figures/              # Figure assets used by both papers
+├── tables/               # Optional standalone tables
 ├── refs.bib              # Bibliography
+├── scripts/              # Figure generation scripts
+├── data/phase1/          # Phase 1 supplementary results and tables
+├── archive/legacy_chinese/ # Older Chinese draft kept for reference
+├── build_aux/            # Auxiliary build files (.aux/.log/.bbl, etc.)
+├── versions/             # Versioned snapshots with PDFs and notes
+├── notes/                # Changelog and polishing notes
 └── README_BUILD.md       # This file
 ```
 
@@ -61,10 +63,20 @@ pdflatex main.tex && bibtex main && pdflatex main.tex && pdflatex main.tex
 latexmk -pdf main.tex
 ```
 
+### Chinese Build
+
+```bash
+cd paper_spic
+xelatex main_cn.tex
+xelatex main_cn.tex
+```
+
 To clean auxiliary files:
 ```bash
 latexmk -c
 ```
+
+Note: this repository now stores existing auxiliary outputs under `build_aux/`, but a fresh local compilation may still regenerate temporary files in the root directory depending on the build command you use.
 
 ## Current Status
 
@@ -89,7 +101,7 @@ All figures have been generated and integrated:
 **Figure regeneration**: If needed, run:
 ```bash
 cd paper_spic
-python generate_figures.py
+python scripts/generate_figures.py
 ```
 
 ### TODO Items in Manuscript
@@ -140,5 +152,5 @@ For questions about this manuscript, contact the corresponding author (TODO: add
 
 ---
 
-**Last Updated**: 2026-04-01
+**Last Updated**: 2026-04-02
 **Status**: Preview Manuscript (Pre-submission)

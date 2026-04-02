@@ -1,0 +1,63 @@
+\documentclass[preprint,12pt,a4paper]{elsarticle}
+
+% 中文支持
+\usepackage{ctex}
+\usepackage{xeCJK}
+
+% 基础包
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{subcaption}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+% 页面设置
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+
+% 禁用超链接颜色
+\hypersetup{colorlinks=false}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{可见度退化下知识蒸馏失效的分支机制分析}
+
+\author[1]{作者姓名}
+\ead{email@institution.edu}
+
+\author[1]{合作者姓名}
+
+\address[1]{院系, 大学, 地址}
+
+\begin{abstract}
+知识蒸馏（KD）被广泛用于压缩目标检测器，但在雾天等可见度退化条件下其效果显著下降。尽管文献中已注意到这一现象，但其背后的失效机制仍缺乏深入理解。本文通过结构化的分支级分析，对KD失效进行了机制驱动的实证研究。我们在雾天街景的三个可见度级别（轻度、中度、重度）上评估五种KD分支，比较其在可见度退化下的响应差异，并围绕分布不匹配、不确定性放大和遮挡三种候选机制展开检验。结果表明，分支级性能结构确实存在：logit蒸馏并非最优，而定位蒸馏在轻度和中度退化下表现出相对稳定性。进一步的机制分析显示，分布不匹配和不确定性放大与KD增益的相关性较弱，在本实验设置中不足以解释观测到的退化模式；相比之下，遮挡作为可见度退化中的具体可测成分，与定位性能呈现最强负相关（$r=-0.989$, $p=0.0015$），是所测试机制中最直接得到支持的因素。我们进一步引入补充性的Phase 1遮挡控制实验，对M2机制进行额外验证：在直接操控遮挡率的设置下，定位蒸馏的相对优势随遮挡增加而减弱，与主实验中的机制判断保持一致。上述结果表明，面向恶劣条件的未来KD方法应优先处理遮挡和空间信息损失，而非仅专注于分布对齐或校准技术。
+\end{abstract}
+
+\begin{keyword}
+知识蒸馏 \sep 目标检测 \sep 可见度退化 \sep 雾天场景 \sep 机制分析 \sep 实证研究
+\end{keyword}
+
+\end{frontmatter}
+
+% 中文主体内容
+\input{sections_cn/intro}
+\input{sections_cn/related_work}
+\input{sections_cn/problem_setup}
+\input{sections_cn/observation}
+\input{sections_cn/mechanism}
+\input{sections_cn/discussion}
+\input{sections_cn/conclusion}
+
+\section*{致谢}
+TODO: 添加致谢信息。
+
+\section*{数据可用性声明}
+实验数据和分析脚本将在本文接受后发布。
+
+\bibliography{refs}
+\end{document}

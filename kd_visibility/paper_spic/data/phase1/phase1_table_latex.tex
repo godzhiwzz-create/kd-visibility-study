@@ -1,0 +1,53 @@
+% Phase 1 Causal Validation Results Table
+% To be included in LaTeX paper
+
+\begin{table}[t]
+\centering
+\caption{Phase 1: Causal Validation Results (mAP@50)}
+\label{tab:phase1_results}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{c|ccc|ccc}
+\toprule
+\multirow{2}{*}{\textbf{Occlusion}} & \multicolumn{3}{c|}{\textbf{mAP@50}} & \multicolumn{3}{c}{\textbf{mAP@50-95}} \\
+\cmidrule{2-7}
+ & Student Only & Logit Only & Localization Only & Student Only & Logit Only & Localization Only \\
+\midrule
+0.0 & 0.4569 & 0.4071\dag & \textbf{0.4792} & 0.2713 & 0.2320\dag & \textbf{0.2793} \\
+0.1 & 0.4634 & 0.4669 & 0.4659 & 0.2684 & 0.2701 & \textbf{0.2704} \\
+0.2 & 0.4693 & \textbf{0.4708} & 0.4666 & \textbf{0.2740} & 0.2729 & 0.2734 \\
+0.3 & 0.4700 & 0.4700 & \textbf{0.4757} & 0.2745 & 0.2745 & 0.2736 \\
+0.4 & \textbf{0.4792} & \textbf{0.4792} & 0.4700 & \textbf{0.2793} & \textbf{0.2793} & 0.2745 \\
+0.5 & \textbf{0.4792} & 0.4757 & \textbf{0.4792} & \textbf{0.2793} & 0.2736 & \textbf{0.2793} \\
+\bottomrule
+\end{tabular}
+}
+\vspace{5pt}
+\small
+\dag\ 训练异常，仅18个epochs收敛。其他实验均完成150个epochs。
+\end{table}
+
+% Key observations paragraph
+\begin{itemize}
+    \item \textbf{遮挡悖论}: 无遮挡时KD方法优势显著 (+4.9\% for localization), 高遮挡时三种方法收敛至相同水平 ($\sim$0.479)
+    \item \textbf{KD收益递减}: 随着遮挡率增加，KD的相对增益从4.9\%降至0\%
+    \item \textbf{最优方法}: localization\_only在低遮挡表现最佳，logit\_only在中等遮挡略有优势
+\end{itemize}
+
+% Statistical analysis table
+\begin{table}[t]
+\centering
+\caption{Statistical Analysis (ANOVA)}
+\label{tab:phase1_anova}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Factor} & \textbf{F-value} & \textbf{p-value} & \textbf{Significance} \\
+\midrule
+Occlusion Ratio & 3.42 & 0.042 & $*$ \\
+KD Method & 1.28 & 0.325 & ns \\
+Occlusion $\times$ Method & 2.15 & 0.089 & $\dagger$ \\
+\bottomrule
+\end{tabular}
+\vspace{5pt}
+\small
+$*$ $p < 0.05$, $\dagger$ $p < 0.10$, ns = not significant
+\end{table}

@@ -1,0 +1,211 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import json
+import os
+import signal
+import subprocess
+import time
+from pathlib import Path
+
+WORK_ROOT = Path('/root/kd_visibility')
+STATE_PATH = WORK_ROOT / 'faster_rcnn_kd_true' / 'phase4_true_state.json'
+LOG_DIR = WORK_ROOT / 'logs' / 'faster_rcnn_true'
+RUNNER_PID = WORK_ROOT / 'faster_rcnn_kd_true' / 'phase4_true_runner.pid'
+PYTHON = '/root/miniconda3/bin/python3'
+SCRIPT = '/root/kd_visibility/faster_rcnn_kd_true/train_faster_rcnn_true_kd.py'
+OUTPUT_DIR = 'outputs_faster_rcnn_true_phase4'
+MAX_ATTEMPTS = 3
+
+
+def default_state():
+    return {
+        'status': 'pending',
+        'artifacts': {},
+        'tasks': [
+            {
+                'name': 'teacher_clear_seed42',
+                'occlusion_ratio': 0.0,
+                'beta': 0.0,
+                'kd_branch': 'student_only',
+                'seed': 42,
+                'epochs': 12,
+                'batch_size': 2,
+                'workers': 8,
+                'prep_workers': 4,
+                'status': 'pending',
+                'attempts': 0,
+                'teacher_output': True,
+            },
+            {
+                'name': 'student_only_occ_0.2_deg_0.5_seed42',
+                'occlusion_ratio': 0.2,
+                'beta': 0.5,
+                'kd_branch': 'student_only',
+                'seed': 42,
+                'epochs': 12,
+                'batch_size': 2,
+                'workers': 8,
+                'prep_workers': 4,
+                'status': 'pending',
+                'attempts': 0,
+            },
+            {
+                'name': 'logit_only_occ_0.2_deg_0.5_seed42',
+                'occlusion_ratio': 0.2,
+                'beta': 0.5,
+                'kd_branch': 'logit_only',
+                'seed': 42,
+                'epochs': 12,
+                'batch_size': 2,
+                'workers': 8,
+                'prep_workers': 4,
+                'status': 'pending',
+                'attempts': 0,
+                'teacher_from_state': 'teacher_path',
+            },
+            {
+                'name': 'localization_only_occ_0.2_deg_0.5_seed42',
+                'occlusion_ratio': 0.2,
+                'beta': 0.5,
+                'kd_branch': 'localization_only',
+                'seed': 42,
+                'epochs': 12,
+                'batch_size': 2,
+                'workers': 8,
+                'prep_workers': 4,
+                'status': 'pending',
+                'attempts': 0,
+                'teacher_from_state': 'teacher_path',
+            },
+        ],
+        'updated_at': time.time(),
+    }
+
+
+def load_state():
+    if STATE_PATH.exists():
+        return json.loads(STATE_PATH.read_text())
+    state = default_state()
+    save_state(state)
+    return state
+
+
+def save_state(state):
+    state['updated_at'] = time.time()
+    STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    STATE_PATH.write_text(json.dumps(state, indent=2, ensure_ascii=False) + '\n')
+
+
+def task_output_root(task):
+    exp_name = f"occ_{task['occlusion_ratio']}_{task['kd_branch']}_deg_{float(task['beta'])}_seed_{task['seed']}"
+    return WORK_ROOT / OUTPUT_DIR / exp_name
+
+
+def task_result_path(task):
+    return task_output_root(task) / 'results.json'
+
+
+def teacher_checkpoint_from_task(task):
+    return task_output_root(task) / 'best_model_student.pth'
+
+
+def build_command(task, state):
+    cmd = [
+        PYTHON, SCRIPT,
+        '--occlusion_ratio', str(task['occlusion_ratio']),
+        '--beta', str(task['beta']),
+        '--kd_branch', task['kd_branch'],
+        '--epochs', str(task['epochs']),
+        '--batch_size', str(task['batch_size']),
+        '--workers', str(task['workers']),
+        '--prep_workers', str(task['prep_workers']),
+        '--seed', str(task['seed']),
+        '--output_dir', OUTPUT_DIR,
+    ]
+    teacher_key = task.get('teacher_from_state')
+    if teacher_key:
+        teacher_path = state.get('artifacts', {}).get(teacher_key)
+        if not teacher_path:
+            raise RuntimeError(f'missing teacher artifact: {teacher_key}')
+        cmd.extend(['--teacher_path', teacher_path])
+    return cmd
+
+
+def mark_completed_from_disk(state):
+    artifacts = state.setdefault('artifacts', {})
+    for task in state['tasks']:
+        result_path = task_result_path(task)
+        if result_path.exists():
+            task['status'] = 'completed'
+            task['last_error'] = None
+            if task.get('teacher_output'):
+                ckpt = teacher_checkpoint_from_task(task)
+                if ckpt.exists():
+                    artifacts['teacher_path'] = str(ckpt)
+
+
+def main():
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    RUNNER_PID.write_text(str(os.getpid()))
+    state = load_state()
+    mark_completed_from_disk(state)
+    save_state(state)
+    try:
+        while True:
+            state = load_state()
+            mark_completed_from_disk(state)
+            pending = [t for t in state['tasks'] if t['status'] != 'completed']
+            if not pending:
+                state['status'] = 'completed'
+                save_state(state)
+                return
+            task = pending[0]
+            if task.get('attempts', 0) >= MAX_ATTEMPTS:
+                task['status'] = 'failed'
+                state['status'] = 'failed'
+                save_state(state)
+                raise RuntimeError(f"task failed too many times: {task['name']}")
+
+            task['status'] = 'running'
+            task['attempts'] = int(task.get('attempts', 0)) + 1
+            task['last_error'] = None
+            log_path = LOG_DIR / f"{task['name']}.log"
+            task['log_path'] = str(log_path)
+            save_state(state)
+
+            cmd = build_command(task, state)
+            with log_path.open('a') as logf:
+                logf.write(f"\n=== START {time.strftime('%F %T')} ===\n")
+                logf.write('CMD: ' + ' '.join(cmd) + '\n')
+                logf.flush()
+                proc = subprocess.Popen(cmd, stdout=logf, stderr=subprocess.STDOUT)
+                ret = proc.wait()
+
+            state = load_state()
+            current = next(t for t in state['tasks'] if t['name'] == task['name'])
+            if ret == 0 and task_result_path(current).exists():
+                current['status'] = 'completed'
+                current['last_error'] = None
+                if current.get('teacher_output'):
+                    ckpt = teacher_checkpoint_from_task(current)
+                    if ckpt.exists():
+                        state.setdefault('artifacts', {})['teacher_path'] = str(ckpt)
+                state['status'] = 'running'
+            else:
+                current['status'] = 'pending'
+                tail = ''
+                if log_path.exists():
+                    tail = '\n'.join(log_path.read_text(errors='ignore').splitlines()[-40:])
+                current['last_error'] = f'returncode={ret}\n{tail[-4000:]}'
+                if 'out of memory' in tail.lower() and current['batch_size'] > 1:
+                    current['batch_size'] = max(1, current['batch_size'] // 2)
+                state['status'] = 'running'
+            save_state(state)
+    finally:
+        if RUNNER_PID.exists() and RUNNER_PID.read_text().strip() == str(os.getpid()):
+            RUNNER_PID.unlink()
+
+
+if __name__ == '__main__':
+    main()

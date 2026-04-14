@@ -9,9 +9,9 @@ import time
 from pathlib import Path
 
 WORK_ROOT = Path('/root/kd_visibility')
-STATE_PATH = WORK_ROOT / 'faster_rcnn_kd_true' / 'phase4_true_state.json'
-RUNNER_PID = WORK_ROOT / 'faster_rcnn_kd_true' / 'phase4_true_runner.pid'
-RUNNER = '/root/kd_visibility/faster_rcnn_kd_true/run_faster_rcnn_true_queue.py'
+STATE_PATH = WORK_ROOT / 'mechanism' / 'faster_rcnn_kd_true' / 'phase4_true_state.json'
+RUNNER_PID = WORK_ROOT / 'mechanism' / 'faster_rcnn_kd_true' / 'phase4_true_runner.pid'
+RUNNER = '/root/kd_visibility/mechanism/faster_rcnn_kd_true/run_faster_rcnn_true_queue.py'
 PYTHON = '/root/miniconda3/bin/python3'
 GUARD_LOG = WORK_ROOT / 'logs' / 'faster_rcnn_true_guard.out'
 YOLO_STATE = WORK_ROOT / 'causal_experiment' / 'true_kd_minimal_state.json'

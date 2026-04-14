@@ -8,10 +8,10 @@ import time
 from pathlib import Path
 
 WORK_ROOT = Path('/root/kd_visibility')
-WAIT_STATE = WORK_ROOT / 'faster_rcnn_kd_true' / 'phase4_m2_state.json'
-STATE_PATH = WORK_ROOT / 'm13_dense_check' / 'm13_dense_state.json'
-RUNNER_PID = WORK_ROOT / 'm13_dense_check' / 'm13_dense_runner.pid'
-RUNNER = '/root/kd_visibility/m13_dense_check/run_m13_dense_queue.py'
+WAIT_STATE = WORK_ROOT / 'mechanism' / 'faster_rcnn_kd_true' / 'phase4_m2_state.json'
+STATE_PATH = WORK_ROOT / 'mechanism' / 'm13_dense_check' / 'm13_dense_state.json'
+RUNNER_PID = WORK_ROOT / 'mechanism' / 'm13_dense_check' / 'm13_dense_runner.pid'
+RUNNER = '/root/kd_visibility/mechanism/m13_dense_check/run_m13_dense_queue.py'
 PYTHON = '/root/miniconda3/bin/python3'
 GUARD_LOG = WORK_ROOT / 'logs' / 'm13_dense_guard.out'
 

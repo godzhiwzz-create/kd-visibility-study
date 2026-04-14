@@ -1,0 +1,60 @@
+# DADG default config — see TODO_DADG.md for authoritative plan.
+# Paths assume server layout; override on CLI for local dryrun.
+
+experiment:
+  name: dadg_default
+  seed: 42
+  output_dir: /root/kd_visibility/gate/experiments/dadg_main
+
+data:
+  dataset_yaml: /root/autodl-tmp/visibility_ablation/low_visibility_kd/data/datasets/cityscapes_yolo/dataset_foggy_all_autodl.yaml
+  imgsz: 640
+  batch: 96
+  workers: 12
+  fraction: 0.3
+
+teacher:
+  weights: /root/autodl-tmp/visibility_ablation/low_visibility_kd/tools/benchmark/assets/gateonly_teacher_best.pt
+  # Teacher is frozen throughout; forward only.
+
+student:
+  weights: /root/autodl-tmp/visibility_ablation/low_visibility_kd/yolov8n.pt
+  epochs: 20
+  optimizer: auto   # inherits YOLOv8 default
+  cos_lr: false
+  patience: 5
+  amp: true
+
+gate:
+  # DADGGate kwargs
+  in_channels: 3
+  widths: [32, 64, 128, 128, 256]
+  mlp_hidden: 128
+  dropout: 0.1
+  # Optimizer for gate parameters (separate param group)
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+
+dadg:
+  # softmax temperature for divergence→target mapping
+  tau: 1.0
+  # Per-weight lower bound — floor hinge penalty keeps any branch from being zeroed
+  entropy_floor: 0.05
+  entropy_weight: 1.0
+  # Whether KD loss is allowed to flow back to gate.
+  # MUST stay true for main runs. Set false ONLY in the collapse-control ablation (task #9).
+  stop_gradient_from_kd: true
+  # Divergence metric knobs
+  loc_reduction: l1  # or iou_gap (requires matched boxes)
+
+kd:
+  # Weight multipliers applied on top of gate output per branch
+  feature_weight: 1.0
+  attention_weight: 1.0
+  localization_weight: 1.0
+  detection_weight: 1.0  # standard YOLOv8 detection loss
+
+logging:
+  log_every: 20
+  log_gate_weights: true
+  save_gate_trajectory: true  # per-epoch CSV of (w_feat, w_attn, w_loc) means

@@ -8,11 +8,11 @@ import time
 from pathlib import Path
 
 WORK_ROOT = Path('/root/kd_visibility')
-STATE_PATH = WORK_ROOT / 'faster_rcnn_kd_true' / 'phase4_true_fix_state.json'
+STATE_PATH = WORK_ROOT / 'mechanism' / 'faster_rcnn_kd_true' / 'phase4_true_fix_state.json'
 LOG_DIR = WORK_ROOT / 'logs' / 'faster_rcnn_true_fix'
-RUNNER_PID = WORK_ROOT / 'faster_rcnn_kd_true' / 'phase4_true_fix_runner.pid'
+RUNNER_PID = WORK_ROOT / 'mechanism' / 'faster_rcnn_kd_true' / 'phase4_true_fix_runner.pid'
 PYTHON = '/root/miniconda3/bin/python3'
-SCRIPT = '/root/kd_visibility/faster_rcnn_kd_true/train_faster_rcnn_true_kd.py'
+SCRIPT = '/root/kd_visibility/mechanism/faster_rcnn_kd_true/train_faster_rcnn_true_kd.py'
 OUTPUT_DIR = 'outputs_faster_rcnn_true_phase4_fix'
 MAX_ATTEMPTS = 3
 

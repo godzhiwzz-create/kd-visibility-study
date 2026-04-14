@@ -8,13 +8,13 @@ import time
 from pathlib import Path
 
 WORK_ROOT = Path('/root/kd_visibility')
-TASKS_PATH = WORK_ROOT / 'faster_rcnn_kd_true' / 'phase4_m2_tasks.json'
-STATE_PATH = WORK_ROOT / 'faster_rcnn_kd_true' / 'phase4_m2_state.json'
+TASKS_PATH = WORK_ROOT / 'mechanism' / 'faster_rcnn_kd_true' / 'phase4_m2_tasks.json'
+STATE_PATH = WORK_ROOT / 'mechanism' / 'faster_rcnn_kd_true' / 'phase4_m2_state.json'
 LOG_DIR = WORK_ROOT / 'logs' / 'faster_rcnn_phase4_m2'
-RUNNER_PID = WORK_ROOT / 'faster_rcnn_kd_true' / 'phase4_m2_runner.pid'
+RUNNER_PID = WORK_ROOT / 'mechanism' / 'faster_rcnn_kd_true' / 'phase4_m2_runner.pid'
 PYTHON = '/root/miniconda3/bin/python3'
-SCRIPT = '/root/kd_visibility/faster_rcnn_kd_true/train_faster_rcnn_true_kd.py'
-SUMMARY_SCRIPT = '/root/kd_visibility/faster_rcnn_kd_true/summarize_phase4_m2.py'
+SCRIPT = '/root/kd_visibility/mechanism/faster_rcnn_kd_true/train_faster_rcnn_true_kd.py'
+SUMMARY_SCRIPT = '/root/kd_visibility/mechanism/faster_rcnn_kd_true/summarize_phase4_m2.py'
 OUTPUT_DIR = 'outputs_faster_rcnn_true_phase4_m2'
 MAX_ATTEMPTS = 3
 DEFAULT_TEACHER = '/root/kd_visibility/outputs_faster_rcnn_true_phase4_fix/occ_0.0_student_only_deg_0.0_seed_42/best_model_student.pth'

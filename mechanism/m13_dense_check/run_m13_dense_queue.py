@@ -8,13 +8,13 @@ import time
 from pathlib import Path
 
 WORK_ROOT = Path('/root/kd_visibility')
-TASKS_PATH = WORK_ROOT / 'm13_dense_check' / 'm13_dense_tasks.json'
-STATE_PATH = WORK_ROOT / 'm13_dense_check' / 'm13_dense_state.json'
+TASKS_PATH = WORK_ROOT / 'mechanism' / 'm13_dense_check' / 'm13_dense_tasks.json'
+STATE_PATH = WORK_ROOT / 'mechanism' / 'm13_dense_check' / 'm13_dense_state.json'
 LOG_DIR = WORK_ROOT / 'logs' / 'm13_dense'
-RUNNER_PID = WORK_ROOT / 'm13_dense_check' / 'm13_dense_runner.pid'
+RUNNER_PID = WORK_ROOT / 'mechanism' / 'm13_dense_check' / 'm13_dense_runner.pid'
 PYTHON = '/root/miniconda3/bin/python3'
-SCRIPT = '/root/kd_visibility/m13_dense_check/train_m13_dense.py'
-ANALYZE = '/root/kd_visibility/m13_dense_check/analyze_m13_dense.py'
+SCRIPT = '/root/kd_visibility/mechanism/m13_dense_check/train_m13_dense.py'
+ANALYZE = '/root/kd_visibility/mechanism/m13_dense_check/analyze_m13_dense.py'
 OUTPUT_DIR = 'outputs_m13_dense_runs'
 MAX_ATTEMPTS = 2
 

@@ -8,6 +8,7 @@ import json
 import os
 import random
 import shutil
+import sys
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 from typing import Iterable
@@ -19,42 +20,19 @@ import yaml
 from PIL import Image, ImageFile
 from ultralytics import YOLO
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from core.degradation import apply_global_degradation, apply_bbox_occlusion, read_image_resilient  # noqa: E402
+from core.data_utils import level_to_source, find_image_and_label, CLASS_NAMES, CLEAR_ROOT  # noqa: E402
+from core.eval_utils import set_seed  # noqa: E402
+
 WORK_ROOT = Path('/root/kd_visibility')
-DATA_ROOT = Path('/root/autodl-tmp/shared_datasets/low_visibility_kd/cityscapes_yolo')
-CLEAR_ROOT = DATA_ROOT / 'clear'
-FOGGY_ROOT = DATA_ROOT / 'foggy_all'
 CACHE_ROOT = Path('/root/autodl-tmp/kd_visibility_effective_cache/datasets')
 DEFAULT_PREP_WORKERS = min(24, max(1, (os.cpu_count() or 8) - 1))
-CLASS_NAMES = {
-    0: 'person', 1: 'rider', 2: 'car', 3: 'truck',
-    4: 'bus', 5: 'train', 6: 'motorcycle', 7: 'bicycle'
-}
-
-
-def set_seed(seed: int) -> None:
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed_all(seed)
 
 
 def stable_int(*parts: object) -> int:
     text = '::'.join(map(str, parts)).encode('utf-8')
     return int(hashlib.md5(text).hexdigest()[:8], 16)
-
-
-def level_to_source(degradation_level: float) -> tuple[str, float | None, float, float]:
-    level = float(degradation_level)
-    if level <= 0.0:
-        return 'clear', None, 1.0, 0.0
-    if level <= 0.3:
-        return 'foggy', 0.005, 1.0, 0.0
-    if level <= 0.5:
-        return 'foggy', 0.01, 1.0, 0.0
-    if level <= 0.7:
-        return 'foggy', 0.02, 0.95, 8.0
-    return 'foggy', 0.02, 0.88, 18.0
 
 
 def branch_hypers(kd_branch: str) -> dict[str, float]:
@@ -91,20 +69,6 @@ def branch_hypers(kd_branch: str) -> dict[str, float]:
     return hyp
 
 
-def find_image_and_label(split: str, stem: str, degradation_level: float) -> tuple[Path, Path]:
-    source_type, beta, _, _ = level_to_source(degradation_level)
-    if source_type == 'clear':
-        img = CLEAR_ROOT / 'images' / split / f'{stem}_leftImg8bit.png'
-        lbl = CLEAR_ROOT / 'labels' / split / f'{stem}_leftImg8bit.txt'
-    else:
-        beta_str = f'{beta:.3f}'.rstrip('0').rstrip('.')
-        img = FOGGY_ROOT / 'images' / split / f'{stem}_leftImg8bit_foggy_beta_{beta_str}.png'
-        lbl = FOGGY_ROOT / 'labels' / split / f'{stem}_leftImg8bit_foggy_beta_{beta_str}.txt'
-        if not lbl.exists():
-            lbl = CLEAR_ROOT / 'labels' / split / f'{stem}_leftImg8bit.txt'
-    return img, lbl
-
-
 def load_yolo_labels(label_path: Path, width: int, height: int) -> list[tuple[int, int, int, int, int]]:
     boxes = []
     if not label_path.exists():
@@ -122,41 +86,6 @@ def load_yolo_labels(label_path: Path, width: int, height: int) -> list[tuple[in
         if x2 > x1 and y2 > y1:
             boxes.append((cls_id, x1, y1, x2, y2))
     return boxes
-
-
-def apply_global_degradation(image: np.ndarray, contrast: float, haze_bias: float) -> np.ndarray:
-    out = image.astype(np.float32) * contrast + haze_bias
-    return np.clip(out, 0, 255).astype(np.uint8)
-
-
-def read_image_resilient(path: Path) -> np.ndarray:
-    image = cv2.imread(str(path))
-    if image is not None:
-        return image
-    ImageFile.LOAD_TRUNCATED_IMAGES = True
-    with Image.open(path) as pil_img:
-        pil_img.load()
-        rgb = pil_img.convert('RGB')
-    return cv2.cvtColor(np.array(rgb), cv2.COLOR_RGB2BGR)
-
-
-def apply_bbox_occlusion(image: np.ndarray, boxes: Iterable[tuple[int, int, int, int, int]], occlusion_ratio: float, rng: random.Random) -> np.ndarray:
-    if occlusion_ratio <= 0:
-        return image
-    out = image.copy()
-    for _, x1, y1, x2, y2 in boxes:
-        bw, bh = x2 - x1, y2 - y1
-        if bw * bh < 100:
-            continue
-        occ_w = max(1, int(bw * np.sqrt(occlusion_ratio)))
-        occ_h = max(1, int(bh * np.sqrt(occlusion_ratio)))
-        max_x = max(0, bw - occ_w)
-        max_y = max(0, bh - occ_h)
-        ox = x1 + (rng.randint(0, max_x) if max_x > 0 else 0)
-        oy = y1 + (rng.randint(0, max_y) if max_y > 0 else 0)
-        fill = int(rng.uniform(96, 160))
-        out[oy:min(y2, oy + occ_h), ox:min(x2, ox + occ_w)] = fill
-    return out
 
 
 def ensure_symlink(target: Path, link_path: Path) -> None:

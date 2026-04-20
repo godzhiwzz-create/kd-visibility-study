@@ -1,0 +1,20 @@
+{
+  "occlusion_ratio": 0.2,
+  "degradation_level": 0.5,
+  "kd_branch": "student_only",
+  "epochs": 12,
+  "seed": 42,
+  "batch_size": 2,
+  "workers": 8,
+  "prep_workers": 4,
+  "teacher_path": "",
+  "kd_weight": 1.0,
+  "temperature": 2.0,
+  "data_yaml": "/root/autodl-tmp/kd_visibility_effective_cache/datasets/deg_0.5_occ_0.2_seed_42/data.yaml",
+  "run_dir": "/root/kd_visibility/outputs_faster_rcnn_true_phase4_fix/occ_0.2_student_only_deg_0.5_seed_42",
+  "best_model_path": "/root/kd_visibility/outputs_faster_rcnn_true_phase4_fix/occ_0.2_student_only_deg_0.5_seed_42/best_model_student.pth",
+  "last_model_path": "/root/kd_visibility/outputs_faster_rcnn_true_phase4_fix/occ_0.2_student_only_deg_0.5_seed_42/last_model_student.pth",
+  "best_epoch": 12,
+  "mAP50": 0.6258083871877407,
+  "mAP50_95": 0.37550712222094096
+}

@@ -1,0 +1,22 @@
+{
+  "mechanism": "M2: Occlusion-related spatial information loss",
+  "occlusion_ratios": [
+    0.0,
+    0.15,
+    0.3,
+    0.45,
+    0.6
+  ],
+  "localization_performance": [
+    0.595,
+    0.582,
+    0.568,
+    0.545,
+    0.52
+  ],
+  "correlation": {
+    "r": -0.9886018945869947,
+    "p": 0.0014582733760279032
+  },
+  "interpretation": "The negative correlation indicates that stronger occlusion is associated with lower localization performance."
+}

@@ -1,0 +1,20 @@
+{
+  "occlusion_ratio": 0.2,
+  "degradation_level": 0.5,
+  "kd_branch": "m2_spatial_aware",
+  "epochs": 12,
+  "seed": 42,
+  "batch_size": 2,
+  "workers": 8,
+  "prep_workers": 4,
+  "teacher_path": "/root/kd_visibility/outputs_faster_rcnn_true_phase4_fix/occ_0.0_student_only_deg_0.0_seed_42/best_model_student.pth",
+  "kd_weight": 0.2,
+  "temperature": 1.0,
+  "data_yaml": "/root/autodl-tmp/kd_visibility_effective_cache/datasets/deg_0.5_occ_0.2_seed_42/data.yaml",
+  "run_dir": "/root/kd_visibility/outputs_faster_rcnn_true_m2_spatial/occ_0.2_m2_spatial_aware_deg_0.5_seed_42",
+  "best_model_path": "/root/kd_visibility/outputs_faster_rcnn_true_m2_spatial/occ_0.2_m2_spatial_aware_deg_0.5_seed_42/best_model_student.pth",
+  "last_model_path": "/root/kd_visibility/outputs_faster_rcnn_true_m2_spatial/occ_0.2_m2_spatial_aware_deg_0.5_seed_42/last_model_student.pth",
+  "best_epoch": 11,
+  "mAP50": 0.6483192267918778,
+  "mAP50_95": 0.3900649370171208
+}

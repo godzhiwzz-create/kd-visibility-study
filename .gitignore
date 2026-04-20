@@ -1,0 +1,46 @@
+# macOS / AppleDouble
+.DS_Store
+._*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# LaTeX auxiliary files
+*.aux
+*.blg
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.spl
+*.xdv
+
+# Manuscript package kept private during journal review
+paper/*
+!paper/README.md
+
+# Editors
+.vscode/
+.idea/
+
+# Experiment runtime outputs
+logs/
+outputs*/
+*_state.json
+*_runner.pid
+*.pth
+*.pt
+
+# Archives and packaged datasets
+*.zip
+*.tar.gz
+*.tar
+*.tgz

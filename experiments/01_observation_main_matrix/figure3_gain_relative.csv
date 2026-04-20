@@ -1,0 +1,5 @@
+method,method_label,light,moderate,heavy
+logit_only,Logit,0.0038,-0.0062,0.0053
+feature_only,Feature,0.0033,0.0001,-0.0049
+attention_only,Attention,0.0025,-0.0096,0.0096
+localization_only,Localization,0.0124,0.0033,-0.0019

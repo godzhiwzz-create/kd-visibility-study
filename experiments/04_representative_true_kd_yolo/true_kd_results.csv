@@ -1,0 +1,4 @@
+setting,precision,recall,map50,map50_95
+student_only,0.6347,0.4954,0.5406,0.3374
+logit_kd,0.6563,0.5003,0.5468,0.3398
+occlusion_aware_kd,0.6287,0.4949,0.5495,0.3462

@@ -1,0 +1,5 @@
+setting,occlusion_ratio,degradation_level,kd_branch,mAP50,mAP50_95,best_epoch,kd_weight,temperature
+student_only,0.2,0.5,student_only,0.6258,0.3755,12,1.0,2.0
+logit_only,0.2,0.5,logit_only,0.6356,0.3853,12,0.1,1.0
+localization_only,0.2,0.5,localization_only,0.6299,0.3691,12,1.0,2.0
+m2_spatial_aware,0.2,0.5,m2_spatial_aware,0.6483,0.3901,11,0.2,1.0

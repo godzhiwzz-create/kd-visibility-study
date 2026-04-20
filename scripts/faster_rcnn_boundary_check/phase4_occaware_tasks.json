@@ -1,0 +1,18 @@
+[
+  {
+    "name": "occlusion_aware_occ_0.2_deg_0.5_seed42",
+    "occlusion_ratio": 0.2,
+    "beta": 0.5,
+    "kd_branch": "occlusion_aware",
+    "seed": 42,
+    "epochs": 12,
+    "batch_size": 2,
+    "workers": 8,
+    "prep_workers": 4,
+    "kd_weight": 0.1,
+    "temperature": 1.0,
+    "status": "pending",
+    "attempts": 0,
+    "teacher_path": "/root/kd_visibility/outputs_faster_rcnn_true_phase4_fix/occ_0.0_student_only_deg_0.0_seed_42/best_model_student.pth"
+  }
+]
